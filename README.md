@@ -29,7 +29,9 @@ npm i -g github:jbenet/fil.pub
 fp login            # paste an API key from fil.pub → Settings → API keys
 ```
 
-Or pin a release: `npm i -g https://github.com/jbenet/fil.pub/releases/download/v<version>/filpub.tgz`.
+Run the same `npm i -g` again to update. Or install a release tarball:
+`npm i -g https://github.com/jbenet/fil.pub/releases/latest/download/filpub.tgz`
+(swap `latest/download` for `download/v<version>` to pin one).
 
 ## Use it
 
