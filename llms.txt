@@ -1,0 +1,35 @@
+# fil.pub
+
+> Paste anything, get a link that lasts. Every pub is an IPFS directory stored on Filecoin.
+
+Reading is open to everyone. Anyone can publish text with no account, as the `anonymous` handle; everything else needs an account's API key (Settings → API keys).
+
+## Read
+- https://fil.pub/ipfs/<cid>/ : a pub. Browsers get the viewer; add ?raw for bytes.
+- https://fil.pub/ipfs/<cid>/meta.json : title, kind, main file, size, created, encrypted.
+- https://fil.pub/ipfs/<cid>/<file> : the file itself, with its real extension.
+- https://fil.pub/ipfs/<cid>?format=raw : one block, for trustless verification.
+- https://fil.pub/<handle>/<name> : latest version of a named pub (every account's names live under its own handle, <name>.fil.pub; https://fil.pub/<handle> is its profile with the account's listed pubs; a pub published without a name is named by its short code, e.g. x7k2qd, 10 characters when unlisted). https://fil.pub/<handle>/<name>.git : its history (git clone works). <name link>?raw : the latest version's file itself, served there (curl -L -o <file> '<name link>?raw').
+- https://fil.pub/dl/<handle>/<name> (or /download/…, /dl/ipfs/<cid>, or <name link>?dl) : every file of the pub as one zip, <name>.v<version>.all-files.zip. Not for encrypted pubs (409: zip them in the browser with the key).
+- https://fil.pub/s/<code> and https://fil.pub/w/<words> : short and word links (e.g. /s/x7k2qd, /w/otter-plaza-crumb) to a name's latest version; 302 to its name link, query kept.
+- https://fil.pub/api/pubs : listed pubs as JSON. https://fil.pub/api/search?q= : full-text search.
+
+## Write with no account (anonymous text)
+- curl -F file=@notes.md https://fil.pub : prints the link, https://fil.pub/anonymous/<code>. Same as POST https://fil.pub/api/pubs with no key, which answers JSON.
+- Text only (plain text, code, Markdown; no images, video or websites), at most 1 MB a file and 10 files a pub. Each network may publish 30 pubs an hour and 50 MB a day.
+- Fields: file (one or many), path, listed (1 to show it on https://fil.pub/anonymous; unlisted by default, with a 10-character code), encrypted=1 with kind=text for one age file, expires (1d|7d|30d; default and longest 30d), burn=1 (read once: the first full read of the file deletes it; one file). No names, no versions.
+- The JSON reply carries delete_token (once): DELETE https://fil.pub/api/names/<code> with header X-Delete-Token deletes the pub. A pub that went answers 410 saying why (expired, read and deleted, deleted by its publisher).
+- Over a limit: 429 with Retry-After.
+
+## Write (Authorization: Bearer fp_live_…)
+- POST https://fil.pub/api/pubs with multipart form data: file (one or many), path (optional, per file),
+  upload (optional, repeatable: {"id": "<upload session>", "path": "dir/file.bin"} for a big file sent ahead in resumable chunks: POST /api/uploads {size, name} → {id, chunk}; PATCH /api/uploads/<id> with Upload-Offset and the next bytes → {offset}; GET /api/uploads/<id> → {offset} to resume),   name (optional: a new name or a new version of one, its file at most 32 MB; without it the pub gets its short code as its name, and the reply's name_url links it; short_url and words_url are its short and word links), visibility (private|unlisted|listed; private: only your account sees it on this site, its bytes on Filecoin stay public unless encrypted; or the older listed=1|0), encrypted (1|0, file must be age ciphertext), anonymous (1|0, publish without the owner's signature), expires (1d|7d|30d|never, default never; a name's later versions keep its first one's), burn=1 (read once).
+- DELETE https://fil.pub/api/names/<name> deletes a name and all of its versions: fil.pub stops serving and forgets it, and its pieces come off Filecoin (storage stops being paid). Copies other IPFS nodes already fetched may still exist.
+- POST https://fil.pub/api/names/<name>/unpublish stops serving a name and all of its versions (links answer 410 "unpublished by its publisher"; lists and search leave it out) and keeps it stored; POST …/republish serves it again. Also /api/pubs/<id>/unpublish and /republish.
+- POST https://fil.pub/api/pubs/<id>/rename {"name": "<new name>"} renames a pub, every version, without a new version (its account; not anonymous pubs); the old name's links 301 to the new one. Publishing with name=<new> and rename=<old> renames it as a new version.
+- Or POST raw bytes: curl --data-binary @notes.md -H "Authorization: Bearer $FP_API_KEY" 'https://fil.pub/api/pubs?filename=notes.md'
+
+## Encryption
+Encrypted pubs are age ciphertext. The key travels only in the URL fragment (#k=AGE1…), which browsers never send to servers.
+
+Full API: https://fil.pub/openapi.json

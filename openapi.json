@@ -1,0 +1,365 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "fil.pub",
+    "version": "0.1.0",
+    "description": "Pasteboard and image uploader on Filecoin."
+  },
+  "servers": [
+    {
+      "url": "https://fil.pub"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "key": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Pub": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "cid": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image",
+              "files"
+            ]
+          },
+          "size": {
+            "type": "integer"
+          },
+          "encrypted": {
+            "type": "boolean"
+          },
+          "listed": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/pubs": {
+      "get": {
+        "summary": "List pubs (listed only, unless authenticated)",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Publish files. With no key: an anonymous text pub (text only, 1 MB a file)",
+        "security": [
+          {},
+          {
+            "key": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "listed": {
+                    "type": "string"
+                  },
+                  "encrypted": {
+                    "type": "string"
+                  },
+                  "password_key": {
+                    "type": "string",
+                    "description": "Encrypted pubs: base64 of key.age, the age identity sealed to an scrypt passphrase recipient (docs/encryption.md)"
+                  },
+                  "anonymous": {
+                    "type": "string"
+                  },
+                  "expires": {
+                    "type": "string",
+                    "enum": [
+                      "1d",
+                      "7d",
+                      "30d",
+                      "never"
+                    ]
+                  },
+                  "burn": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pub"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "post": {
+        "summary": "Publish like POST /api/pubs, answering the link as plain text (curl -F file=@x)",
+        "security": [
+          {},
+          {
+            "key": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The link",
+            "content": {
+              "text/plain": {}
+            }
+          }
+        }
+      }
+    },
+    "/oembed": {
+      "get": {
+        "summary": "oEmbed for a pub link",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/pubs/{id}": {
+      "get": {
+        "summary": "One pub with storage status",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Change listed / pinned",
+        "security": [
+          {
+            "key": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/search": {
+      "get": {
+        "summary": "Full-text search",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/names": {
+      "get": {
+        "summary": "Named pubs",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/names/{name}": {
+      "get": {
+        "summary": "A name with all versions (410 once it expired, was read once or deleted)",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "410": {
+            "description": "Gone"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a name and all its versions: X-Delete-Token (anonymous publisher) or a write key",
+        "security": [
+          {},
+          {
+            "key": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Delete-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted"
+          },
+          "403": {
+            "description": "Wrong token"
+          },
+          "410": {
+            "description": "Already gone"
+          }
+        }
+      }
+    },
+    "/api/names/{name}/unpublish": {
+      "post": {
+        "summary": "Stop serving a name and all its versions; it stays stored and can be republished (its account, or X-Delete-Token)",
+        "security": [
+          {},
+          {
+            "key": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unpublished"
+          },
+          "403": {
+            "description": "Not yours"
+          },
+          "410": {
+            "description": "Gone"
+          }
+        }
+      }
+    },
+    "/api/pubs/{id}/rename": {
+      "post": {
+        "summary": "Rename a pub, every version, without a new version; the old name redirects (its account)",
+        "security": [
+          {
+            "key": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Renamed"
+          },
+          "400": {
+            "description": "Not a valid name, or an anonymous pub"
+          },
+          "403": {
+            "description": "Not yours"
+          },
+          "409": {
+            "description": "Name taken"
+          }
+        }
+      }
+    },
+    "/api/names/{name}/republish": {
+      "post": {
+        "summary": "Serve an unpublished name again",
+        "security": [
+          {},
+          {
+            "key": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Published"
+          },
+          "403": {
+            "description": "Not yours"
+          },
+          "410": {
+            "description": "Gone"
+          }
+        }
+      }
+    },
+    "/api/report": {
+      "post": {
+        "summary": "Report a pub, or agree/disagree with a flag",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

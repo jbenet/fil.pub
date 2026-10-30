@@ -1,0 +1,27 @@
+# This repo is a snapshot of fil.pub's public parts, pushed by fil.pub's CI. On each push, check
+# that fp runs; on a version tag (pushed with the snapshot that bumps package.json), attach the
+# installable tarball to a GitHub release: npm i -g https://github.com/jbenet/fil.pub/releases/download/vX.Y.Z/filpub.tgz
+name: release
+on:
+  push: { branches: [main], tags: ['v*'] }
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node cli/fp.mjs help
+      - run: npm i -g . && fp help >/dev/null
+  release:
+    needs: check
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm pack && mv filpub-*.tgz filpub.tgz
+      - run: gh release create "$GITHUB_REF_NAME" filpub.tgz --generate-notes
+        env: { GH_TOKEN: "${{ github.token }}" }

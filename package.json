@@ -1,0 +1,12 @@
+{
+  "name": "filpub",
+  "version": "0.1.0",
+  "description": "fil.pub: paste anything, get a link that lasts. The fp command line, API docs and more.",
+  "homepage": "https://fil.pub",
+  "repository": { "type": "git", "url": "git+https://github.com/jbenet/fil.pub.git" },
+  "license": "MIT",
+  "type": "module",
+  "bin": { "fp": "cli/fp.mjs" },
+  "files": ["cli/"],
+  "engines": { "node": ">=22.13" }
+}
