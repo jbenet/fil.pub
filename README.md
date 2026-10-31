@@ -19,6 +19,7 @@ published from fil.pub's own repository by CI; see [CONTRIBUTING.md](CONTRIBUTIN
 | `fp`, the command line | [`cli/`](cli/), docs in [docs/cli.md](docs/cli.md) |
 | The HTTP API | [docs/api.md](docs/api.md), [openapi.json](openapi.json) (OpenAPI 3.1) |
 | A guide for agents | [llms.txt](llms.txt) |
+| What's new, week by week | [CHANGELOG.md](CHANGELOG.md), also at [fil.pub/docs#changelog](https://fil.pub/docs#changelog) |
 
 ## Install fp
 
