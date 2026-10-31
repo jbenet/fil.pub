@@ -5,7 +5,8 @@ Small fixes are summed up in one line. Security fixes are listed without their d
 
 ## Week of Oct 26, 2026
 
-![A folder pub running a game compiled to WebAssembly](changelog/2026-10-26-wasm.webp)
+| ![A folder pub running a game compiled to WebAssembly](changelog/2026-10-26-wasm.webp) | ![The Links menu with raw file, curl and wget rows](changelog/2026-10-26-links.webp) | ![Docs → Command line, installing fp from the public repo](changelog/2026-10-26-fp.webp) |
+|:-:|:-:|:-:|
 
 - **`fp` is open source.** The command line lives at [github.com/jbenet/fil.pub](https://github.com/jbenet/fil.pub) (MIT). Install it with `npm i -g github:jbenet/fil.pub` or from the latest release; Docs → Command line shows how.
 - **Sites can run WebAssembly.** Folder pubs that ship `.wasm` (games, small tools) now run, and their scripts can read files in ranges. Pubs stay sandboxed.
@@ -15,15 +16,14 @@ Small fixes are summed up in one line. Security fixes are listed without their d
 - **The key vault stays open** in every tab while you're signed in; signing out locks it.
 - **`fp put`** prints one main link on stdout and the labeled ones on stderr, names a pub after its file, takes flags to print only the links you want, and every command has its own `-h`.
 - **This changelog**, in Docs → What's new and in the public repo.
-- Fixes: a filename you type without an extension keeps none, and the file is typed by its contents. The HUD theme's background animation is bigger and fainter.
-
-![The Links menu with raw file, curl and wget rows](changelog/2026-10-26-links.webp)
-
-![Docs → Command line, installing fp from the public repo](changelog/2026-10-26-fp.webp)
+- **`fp put` from stdin names the file for what it is**: `paste.md`, `paste.json`, `paste.png` and so on, or plain `paste` when it can't tell (no more `.txt`). `--detect-type=false` skips the guess. Plain uploads with no filename get the same.
+- **Every docs page has its own address**, like [fil.pub/docs/cli](https://fil.pub/docs/cli). Old `/docs#cli` links still work.
+- Fixes: a filename you type without an extension keeps none, and the file is typed by its contents. The HUD theme's background animation is bigger and fainter. What's new shows screenshots as a row of thumbnails that open full size.
 
 ## Week of Oct 19, 2026
 
-![An EPUB book open in the reader](changelog/2026-10-19-book.webp)
+| ![An EPUB book open in the reader](changelog/2026-10-19-book.webp) | ![Encrypting a pub, with the key vault and a password](changelog/2026-10-19-vault.webp) | ![The home page for visitors: latest pubs and publishing without an account](changelog/2026-10-19-home.webp) |
+|:-:|:-:|:-:|
 
 - **Publish without an account.** Text, code and Markdown under `anonymous`, from the New page, `fp put` or `curl -F file=@notes.md fil.pub`. Pubs expire after 30, 7 or 1 days, can be read once, and come with a delete token.
 - **Accounts for everyone.** Sign up with a wallet, a passkey, email or Bluesky. Get a handle like `you.fil.pub`, or use your own domain (the same `_atproto` record as Bluesky). Profiles and search.
@@ -41,13 +41,10 @@ Small fixes are summed up in one line. Security fixes are listed without their d
 - **Faster pages**: a smaller first load, compressed assets, and git histories kept between visits.
 - Fixes: dead links say Not found (404 or 410), `fp ls` lists every pub, the Pubs list pages past 200 names, and about 60 smaller fixes. Security: hardening from several reviews.
 
-![Encrypting a pub, with the key vault and a password](changelog/2026-10-19-vault.webp)
-
-![The home page for visitors: latest pubs and publishing without an account](changelog/2026-10-19-home.webp)
-
 ## Week of Oct 12, 2026: the first version
 
-![Publishing a pub](changelog/2026-10-12-publish.webp)
+| ![Publishing a pub](changelog/2026-10-12-publish.webp) | ![An encrypted pub: the key stays in the link](changelog/2026-10-12-secret.webp) |
+|:-:|:-:|
 
 - **Pubs.** Paste text or drop files, images or folders and get a link. Every pub is an IPFS folder stored on Filecoin, three copies with different providers.
 - **Links that last.** `/ipfs/<cid>/` works on any IPFS gateway; names live under your handle, with short links too.
@@ -55,5 +52,3 @@ Small fixes are summed up in one line. Security fixes are listed without their d
 - **Encryption** in your browser, with the key in the link's `#` part, which never reaches the server. **Signed pubs** show who published them.
 - **`fp`**, a REST API with an OpenAPI file, `llms.txt` for agents, and a ShareX config.
 - **Two themes**, Sharp and HUD (⇧T), light and dark, and keyboard shortcuts everywhere (`?` lists them).
-
-![An encrypted pub: the key stays in the link](changelog/2026-10-12-secret.webp)

@@ -27,7 +27,9 @@ put
   --name <name>             publish as <handle>/<name>, or its next version
   --no-name                 name it by its short code, not the file or folder
   --message <text>          the version's message
-  --filename <name>         file name for stdin (default paste.txt)
+  --filename <name>         file name for stdin (default: paste.<type> as its bytes look,
+                            e.g. paste.md or paste.png; plain paste when unsure)
+  --detect-type=false       stdin: don't guess the type; name it paste
   --encrypt                 encrypt one file on this machine; the key is in the link's #k=
   --password                with --encrypt: the link without the key opens with a password
                             too (asked for, or FP_PASSWORD; the server never sees it)
@@ -95,7 +97,9 @@ Flags
   --name <name>             publish as <handle>/<name>, or its next version
   --no-name                 name it by its short code, not the file or folder
   --message <text>          the version's message
-  --filename <name>         file name for stdin (default paste.txt)
+  --filename <name>         file name for stdin (default: paste.<type> as its bytes look,
+                            e.g. paste.md or paste.png; plain paste when unsure)
+  --detect-type=false       stdin: don't guess the type; name it paste
   --encrypt                 encrypt one file on this machine; the key is in the link's #k=
   --password                with --encrypt: the link without the key opens with a password
                             too (asked for, or FP_PASSWORD; the server never sees it)

@@ -8,6 +8,7 @@ import { spawn } from 'node:child_process';
 import { encrypt, decrypt, wrapKey, unwrapKey } from './age.mjs'; // same envelope and format as the web app, on node:crypto
 import { HELP, COMMANDS, commandHelp } from './help.mjs';
 import { slugOf, stemSlug, gatewayUrl, PUBLIC_GATEWAY } from './links.mjs';
+import { pasteName } from './detect.mjs';
 import { stripImage } from './exif-strip.mjs'; // generated from web/src/lib/exif-strip.ts (scripts/cli-exif.mjs)
 
 const ORIGIN = (process.env.FP_ORIGIN || 'https://fil.pub').replace(/\/$/, '');
@@ -118,7 +119,9 @@ const LINK_FLAGS = ['name-link', 'short-link', 'word-link', 'ipfs-link', 'gatewa
 async function put(args, flags) {
   let files = [], isDir = false;
   for (const a of args.length ? args : ['-']) {
-    if (a === '-') files.push({ path: flags.filename || 'paste.txt', bytes: await readStdin() });
+    // Stdin with no --filename is named for what it looks like (paste.md, paste.png...), or plain
+    // `paste` (0135); --detect-type=false skips the guess.
+    if (a === '-') { const bytes = await readStdin(); files.push({ path: flags.filename || pasteName(bytes, !/^(false|0|no|off)$/i.test(String(flags['detect-type'])) && !flags['no-detect-type']), bytes }); }
     else if ((await stat(a)).isDirectory()) { isDir = true; for (const f of await walk(a)) files.push({ path: f.path, bytes: await readFile(f.file) }); }
     else files.push({ path: basename(a), bytes: await readFile(a) });
   }
