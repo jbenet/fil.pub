@@ -9,7 +9,7 @@ Small fixes are summed up in one line. Security fixes are listed without their d
 |:-:|:-:|
 
 - **Links in a README open the pub's own files.** A relative link to another file of the pub (a PDF, a script) opens it in the pub's page, and Back returns to the README. Relative pictures show whether or not the link ends in `/`.
-- Fixes: an encrypted folder's README shows its pictures; editing a folder shows its README's pictures, and its links open the folder's files; opening an image or PDF of a folder to edit shows it instead of its raw bytes; "1 file", not "1 files"; `.` opens storage details on a folder pub's info page; the feedback screenshot includes an encrypted pub's pictures.
+- Fixes: an encrypted folder's README shows its pictures; editing a folder shows its README's pictures, and its links open the folder's files; opening an image or PDF of a folder to edit shows it instead of its raw bytes; "1 file", not "1 files"; `.` opens storage details on a folder pub's info page; the feedback screenshot includes an encrypted pub's pictures. Esc closes the shortcuts sheet without leaving the sign-in page; after Send code you can type the email code right away; the sign-in page names the network this site stores on; Settings → Storage and wallet no longer jumps as its numbers load.
 - **Phones:** a folder pub's README scrolls to its end, the files button says it is one, the Filecoin popup opens under its mark, and the feedback box no longer zooms in on iPhone. On a pub's info page, the fil.pub mark opens the site menu and More shows the links, versions and downloads, with Feedback.
 
 ## Week of Oct 26, 2026
