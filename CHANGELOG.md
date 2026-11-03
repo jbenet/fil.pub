@@ -3,6 +3,14 @@
 New features and notable fixes on [fil.pub](https://fil.pub) and in `fp`, newest first, one section a week.
 Small fixes are summed up in one line. Security fixes are listed without their details.
 
+## Week of Nov 2, 2026
+
+| ![A folder pub's README with its picture and links to its other files](changelog/2026-11-02-readme.webp) | ![The README's PDF link, opened in the pub's page](changelog/2026-11-02-pdf.webp) |
+|:-:|:-:|
+
+- **Links in a README open the pub's own files.** A relative link to another file of the pub (a PDF, a script) opens it in the pub's page, and Back returns to the README. Relative pictures show whether or not the link ends in `/`.
+- **Phones:** a folder pub's README scrolls to its end, the files button says it is one, the Filecoin popup opens under its mark, and the feedback box no longer zooms in on iPhone. On a pub's info page, the fil.pub mark opens the site menu and More shows the links, versions and downloads, with Feedback.
+
 ## Week of Oct 26, 2026
 
 | ![A folder pub running a game compiled to WebAssembly](changelog/2026-10-26-wasm.webp) | ![The Links menu with raw file, curl and wget rows](changelog/2026-10-26-links.webp) | ![Docs → Command line, installing fp from the public repo](changelog/2026-10-26-fp.webp) |
@@ -18,6 +26,9 @@ Small fixes are summed up in one line. Security fixes are listed without their d
 - **This changelog**, in Docs → What's new and in the public repo.
 - **`fp put` from stdin names the file for what it is**: `paste.md`, `paste.json`, `paste.png` and so on, or plain `paste` when it can't tell (no more `.txt`). `--detect-type=false` skips the guess. Plain uploads with no filename get the same.
 - **Every docs page has its own address**, like [fil.pub/docs/cli](https://fil.pub/docs/cli). Old `/docs#cli` links still work.
+- **Binary files open as hex.** A file that isn't text shows a hex dump (offset, bytes, ASCII) instead of "No preview", or its bytes read as text; your pick is remembered for that file type.
+- **Who sees a pub covers every version.** Changing Listed, Unlisted or Private on a pub's details changes all its versions at once, without publishing a new one. Changing it while editing does the same.
+- **Taken-down pubs answer 451** (Unavailable For Legal Reasons) everywhere, and Docs → Errors lists 410, 423 and 451.
 - Fixes: a filename you type without an extension keeps none, and the file is typed by its contents. The HUD theme's background animation is bigger and fainter. What's new shows screenshots as a row of thumbnails that open full size.
 
 ## Week of Oct 19, 2026
